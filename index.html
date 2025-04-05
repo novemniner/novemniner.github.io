@@ -12,16 +12,14 @@ body{
 
 #viewer {
   width: 1080px;
-  height: 320px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 20px;
   background-color: black;
   margin: auto;
-  box-sizing: border-box;
 }
-
 
 .row {
   display: flex;
@@ -31,8 +29,9 @@ body{
 
 .card {
   position: relative;
-  flex: 0 0 70px;  /* ← これが重要：flexでサイズを固定 */
-  height: 110px;
+  width: 150px;
+  flex: 0 0 77px;  /* ← これが重要：flexでサイズを固定 */
+  height: 120px;
   background-color: white;
   border: 2px solid #ccc;
   border-radius: 8px;
@@ -155,7 +154,7 @@ body{
   white-space: nowrap;
   overflow: visible;      /* はみ出しを許可 */
   text-overflow: unset;  
-  z-index: 1; /* ← カードの上に出す */  
+  
 }
 
 .controls {
