@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>カード切り替え＆保存</title>
+  <style>
+body{
+  background-color: black;
+}
+
+#viewer {
+  width: 1080px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: black;
+  margin: auto;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.card {
+  position: relative;
+  width: 100px;
+  height: 120px;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow: hidden;
+}
+
+.card img {
+  height: auto;
+  object-fit: contain;
+  margin: 0;
+  filter: drop-shadow(0 0 5px  white); /* ✅ ふわっと光らせる */
+}
+
+.card .top-img {
+  width: 85px;
+  margin-top: -20px;
+  margin-bottom: -5px;
+}
+
+.card .bottom-img {
+  width: 80px;
+  margin-top: -10px;
+}
+
+.card .overlay-text {
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 900;
+  pointer-events: none;
+
+  margin-left: -2px;
+  white-space: nowrap;
+  overflow: visible;      /* はみ出しを許可 */
+  text-overflow: unset;  
+}
+
+.controls {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.counter {
+  font-size: 18px;
+  display: inline-block;
+  margin-right: 20px;
+  color: white; /* ✅ 白文字にして視認性アップ */
+}
+
+button {
+  padding: 8px 16px;
+  margin: 0 10px;
+  font-size: 16px;
+}
+  </style>
+</head>
+<body>
+
+<div id="viewer"></div>
+
+<div class="controls">
+  <span class="counter" id="pageCounter"></span>
+  <button id="prevBtn">← 前へ</button>
+  <button id="nextBtn">次へ →</button>
+  <button id="saveBtn">保存</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+  const viewer = document.getElementById('viewer');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const pageCounter = document.getElementById('pageCounter');
+  const count = 9;
+
+  // ✅ 黒背景に映えるカラフルで視認性の高い色
+  const colors = {
+    red: {
+    background: '#F15BB5',
+    border: '#E649A0',
+    text: '#00F5D4',
+    textShadow: '#1A1A1A'
+  },
+  green: {
+    background: '#00B4D8',
+    border: '#0077B6',
+    text: '#FF6F00',
+    textShadow: '#1A1A1A'
+  },
+  yellow: {
+    background: '#FFD93D',
+    border: '#E6C200',
+    text: '#D90429',
+    textShadow: '#FFFFFF'
+  },
+};
+//cat, up, sun, frog , noon
+const data = [
+  // 🔵 ページ1
+  [
+    { top: 'like100.png', bottom: 'question.png', color: 'yellow', text: 'ガチャ' },
+    // { top: 'follow.png', bottom: 'coal.png', color: 'yellow', text: 'ガチャ' },
+    { top: 'heart_me.png', bottom: 'question.png', color: 'yellow', text: 'ガチャ' },
+    { top: 'rose.png', bottom: 'zombie.png', color: 'red', text: 'ゾンビ' },
+    { top: 'tiktok.png', bottom: 'golden_carrot.png', color: 'green', text: '金人参' },
+    { top: 'gg.png', bottom: 'fire.png', color: 'green', text: '小ダメ' },
+    { top: 'cat_paws.png', bottom: 'cat.png', color: 'green', text: '弱敵撃破' },
+    { top: 'seriously.png', bottom: 'buff.png', color: 'green', text: '移動バフ' },
+    { top: 'finger_heart.png', bottom: 'skeleton.png', color: 'red', text: '弓隊' },
+    { top: 'new_yer_protect.png', bottom: 'armored_wolf.png', color: 'green', text: '中敵撃破' },
+    { top: 'minecraft.png', bottom: 'sun.png', color: 'red', text: '晴れ60秒' },
+    { top: 'rosa.png', bottom: 'warden.png', color: 'red', text: 'ガチャ' },
+    { top: 'sakura_mochi.png', bottom: 'warden.png', color: 'red', text: 'ガチャ' },
+    { top: 'friendship.png', bottom: 'warden.png', color: 'yellow', text: 'ガチャ' },
+    { top: 'easy.png', bottom: 'buff.png', color: 'yellow', text: '無敵15秒' },
+    { top: 'perfume.png', bottom: 'TNT.png', color: 'red', text: 'TNT' },
+    { top: 'love_you_jp.png', bottom: 'frog.png', color: 'green', text: '強敵撃破' },
+    { top: 'strawberry_choco.png', bottom: 'fire.png', color: 'green', text: '中ダメ' },
+    { top: 'doughnut.png', bottom: 'ravager.png', color: 'red', text: 'ラヴェ' },
+  ],
+  [
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'cap.png', bottom: 'buff.png', color: 'green', text: '攻撃バフ' },
+    { top: 'mustache.png', bottom: 'buff.png', color: 'green', text: '体力バフ' },
+    { top: 'hand_heart.png', bottom: 'blaze.png', color: 'red', text: 'ブレイズ' },
+    { top: 'confetti.png', bottom: 'vindicator.png', color: 'red', text: 'ヴィディ' },
+    { top: 'controller.png', bottom: 'turtle.png', color: 'yellow', text: 'ライダー' },
+    { top: 'bee.png', bottom: 'buff.png', color: 'yellow', text: '巨大化' },
+    { top: 'super_gg.png', bottom: 'fire.png', color: 'green', text: '大ダメ' },
+    { top: 'bowknot.png', bottom: 'sun.png', color: 'green', text: '昼60秒' },
+    { top: 'hearts.png', bottom: 'evoker.png', color: 'red', text: 'エヴォカ' },
+    { top: 'love_you.png', bottom: 'wither_skeleton.png', color: 'red', text: 'ウィスケ' },
+    { top: 'corgi.png', bottom: 'witch.png', color: 'red', text: '強敵軍団' },
+    { top: 'frog.png', bottom: 'kill_warden.png', color: 'green', text: 'キル3体' },
+    { top: 'forever_rosa.png', bottom: 'debuff.png', color: 'red', text: '弱化5分' },
+    { top: 'fortune_kitty.png', bottom: 'kill_wither.png', color: 'green', text: 'キル3体' },
+    { top: 'money_gun.png', bottom: 'fire.png', color: 'green', text: '特大ダメ' },
+    { top: 'dj_glasses.png', bottom: 'random_enemy.png', color: 'red', text: '敵200体' },
+    { top: 'swan.png', bottom: 'warden.png', color: 'red', text: '？体' },
+  ],
+  [
+    { top: 'galaxy.png', bottom: 'wither.png', color: 'red', text: '？体' },
+    { top: 'fireworks.png', bottom: 'tnt_many.png', color: 'red', text: 'TNT花火' },
+
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+    { top: 'genius.png', bottom: 'spider.png', color: 'red', text: 'クモと巣' },
+  ],
+];
+
+  let currentIndex = 0;
+
+  function updateCounter() {
+    pageCounter.textContent = `${currentIndex + 1} / ${data.length}`;
+  }
+
+  function generateCards() {
+    viewer.innerHTML = '';
+    const cardSet = data[currentIndex];
+
+    const topRow = document.createElement('div');
+    topRow.className = 'row';
+
+    const bottomRow = document.createElement('div');
+    bottomRow.className = 'row';
+
+    for (let i = 0; i < 2 * count; i++) {
+      const cardData = cardSet[i];
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const topImg = document.createElement('img');
+      topImg.className = 'top-img';
+      topImg.src = `gift/${cardData.top}`;
+      topImg.alt = 'top image';
+
+      const bottomImg = document.createElement('img');
+      bottomImg.className = 'bottom-img';
+      bottomImg.src = `image/${cardData.bottom}`;
+      bottomImg.alt = 'bottom image';
+
+      const colorSet = colors[cardData.color] || colors.red;
+      card.style.backgroundColor = colorSet.background;
+      card.style.borderColor = colorSet.border;
+
+// テキストは白色なので JS 側では色指定不要
+const textOverlay = document.createElement('div');
+textOverlay.className = 'overlay-text';
+textOverlay.textContent = cardData.text || '';
+textOverlay.style.color = colorSet.text; // ✅ 色指
+textOverlay.style.textShadow = `
+  2px 2px 0 ${colorSet.textShadow},
+ -2px 2px 0 ${colorSet.textShadow},
+  2px -2px 0 ${colorSet.textShadow},
+ -2px -2px 0 ${colorSet.textShadow}
+`;
+
+      card.appendChild(topImg);
+      card.appendChild(bottomImg);
+      card.appendChild(textOverlay);
+
+      const row = i < count ? topRow : bottomRow;
+      row.appendChild(card);
+    }
+
+    viewer.appendChild(topRow);
+    viewer.appendChild(bottomRow);
+    updateCounter();
+  }
+
+  prevBtn.addEventListener('click', () => {
+    if (currentIndex > 0) {
+      currentIndex--;
+      generateCards();
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    if (currentIndex < data.length - 1) {
+      currentIndex++;
+      generateCards();
+    }
+  });
+
+  saveBtn.addEventListener('click', async () => {
+    const images = viewer.querySelectorAll('img');
+    const loaded = [];
+
+    images.forEach(img => {
+      if (!img.complete) {
+        loaded.push(new Promise(resolve => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        }));
+      }
+    });
+
+    await Promise.all(loaded);
+
+    const canvas = await html2canvas(viewer, { useCORS: true });
+    const dataUrl = canvas.toDataURL('image/png');
+
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = `cards_${currentIndex + 1}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+
+  generateCards();
+</script>
+</body>
+</html>
