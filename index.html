@@ -5,7 +5,9 @@
   <title>カード切り替え＆保存</title>
   <style>
 body{
-  background-color: black;
+  background-color: white;
+  margin: 0;
+  padding: 0;
 }
 
 #viewer {
@@ -28,7 +30,7 @@ body{
 .card {
   position: relative;
   width: 150px;
-  flex: 0 0 90px;  /* ← これが重要：flexでサイズを固定 */
+  flex: 0 0 77px;  /* ← これが重要：flexでサイズを固定 */
   height: 120px;
   background-color: white;
   border: 2px solid #ccc;
@@ -43,7 +45,82 @@ body{
   padding-left: 10px;
   padding-right: 10px;
   overflow: hidden;
+  
+  animation: fadeIn 0.5s ease;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes rotateIn {
+  from { transform: rotate(-30deg) scale(0.8); opacity: 0; }
+  to   { transform: rotate(0) scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate(0); }
+  25% { transform: translate(3px, 0); }
+  50% { transform: translate(-3px, 0); }
+  75% { transform: translate(2px, 0); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes bounceIn {
+  0% { transform: translateY(-30px); opacity: 0; }
+  50% { transform: translateY(10px); }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideLeftIn {
+  0% { transform: translateX(-100px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideRightIn {
+  0% { transform: translateX(100px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes flipIn {
+  0% { transform: rotateY(90deg); opacity: 0; }
+  100% { transform: rotateY(0); opacity: 1; }
+}
+
+@keyframes zoomRotate {
+  0% { transform: scale(0.2) rotate(-180deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes fadeDownIn {
+  0% { transform: translateY(-40px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(3deg); }
+  50% { transform: rotate(-3deg); }
+  75% { transform: rotate(2deg); }
+}
+
+
+
+/* 共通アニメーションクラス */
+.card.rotate-in    { animation: rotateIn 0.4s ease-out; }
+.card.shake-in     { animation: shake 0.3s ease-out; }
+.card.pop-in       { animation: popIn 0.4s ease-out; }
+.card.bounce-in    { animation: bounceIn 0.5s ease-out; }
+.card.slide-left-in { animation: slideLeftIn 0.4s ease-out; }
+.card.slide-right-in { animation: slideRightIn 0.4s ease-out; }
+.card.flip-in { animation: flipIn 0.5s ease; }
+.card.zoom-rotate { animation: zoomRotate 0.5s ease; }
+.card.fade-down-in { animation: fadeDownIn 0.5s ease; }
+.card.wiggle { animation: wiggle 0.4s ease; }
 
 .card img {
   height: auto;
@@ -69,7 +146,7 @@ body{
   left: 0;
   right: 0;
   text-align: center;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 900;
   pointer-events: none;
 
@@ -77,6 +154,7 @@ body{
   white-space: nowrap;
   overflow: visible;      /* はみ出しを許可 */
   text-overflow: unset;  
+  
 }
 
 .controls {
@@ -116,9 +194,14 @@ button {
   const nextBtn = document.getElementById('nextBtn');
   const saveBtn = document.getElementById('saveBtn');
   const pageCounter = document.getElementById('pageCounter');
+  const animations = [
+  'rotate-in', 'shake-in', 'pop-in', 'bounce-in',
+  'slide-left-in', 'slide-right-in', 'flip-in',
+  'zoom-rotate', 'fade-down-in', 'wiggle'
+];
   const count = 10;
   const isDebug = 0; // ← 1なら表示あり、0なら非表示
-  const displayInterval = (isDebug>1? 3000:10000); // ← 1なら表示あり、0なら非表示
+  const displayInterval = (isDebug>0? 2000:10000); // ← 1なら表示あり、0なら非表示
 
   // ✅ 黒背景に映えるカラフルで視認性の高い色
   const colors = {
@@ -235,6 +318,9 @@ const data = [
       const card = document.createElement('div');
       card.className = 'card';
 
+const randomAnim = animations[Math.floor(Math.random() * animations.length)];
+card.classList.add(randomAnim);
+      
       const topImg = document.createElement('img');
       topImg.className = 'top-img';
       topImg.src = `gift/${cardData.top}`;
