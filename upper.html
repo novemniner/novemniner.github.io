@@ -9,14 +9,13 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background-
-    }
+      }
 
     #capture-area {
       width: 1080px;
       height: 470px;
       position: relative;
-      background: linear-gradient(to bottom, #2a003d, #000000);
+      background: linear-gradient(to bottom, #a1e3ff, #c2f0fc);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -46,7 +45,7 @@
       bottom: 20px;
       width: 100%;
       text-align: center;
-      font-size: 54px;
+      font-size: 58px;
       font-weight: 900;
       color: red;
       text-shadow:
@@ -85,6 +84,15 @@
       z-index: 10;
       position: relative;
     }
+  
+
+    /* ギフトカード用フォントクラス */
+    .gift-card {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -93,17 +101,29 @@
     <img src="./image/ender_dragon.gif" alt="エンダードラゴン" class="dragon-bg">
 
     <!-- 上部インフォメーション -->
-    <div class="info-box">
-      <div style="background: #F15BB5; border: 2px solid #E649A0; padding: 6px 10px; margin-bottom: 6px; border-radius: 8px; color: #00F5D4; text-shadow: 2px 2px 3px #1A1A1A;">
-        🔴 妨害ギフト（爆発・敵召喚など）
-      </div>
-      <div style="background: #00B4D8; border: 2px solid #0077B6; padding: 6px 10px; margin-bottom: 6px; border-radius: 8px; color: #FF6F00; text-shadow: 1px 1px #1A1A1A;">
-        🟢 お助けギフト（敵を破壊・ダメージなど）
-      </div>
-      <div style="background: #FFD93D; border: 2px solid #E6C200; padding: 6px 10px; border-radius: 8px; color: #D90429; text-shadow: 2px 2px 3px #FFFFFF;">
-        🟡 その他ギフト（演出など）
-      </div>
-    </div>
+    <div style="display: flex; gap: 8px; width: 100%; padding: 10px 20px; box-sizing: border-box; background: rgba(0, 0, 0, 0.6); position: absolute; top: 0; left: 0; z-index: 10;">
+  <div class="gift-card" style="flex: 1; background: #F15BB5; border: 2px solid #E649A0; padding: 0px 1px; border-radius: 8px; color: #00F5D4; text-shadow: 2px 2px 3px #1A1A1A; display: flex; align-items: center; justify-content: center; text-align: center;"><div style="font-size: 48px; margin-right: 10px;">💣</div>
+  <div style="display: flex; flex-direction: column; align-items: center;">
+  <div style="font-size: 24px;">妨害ギフト</div>
+  <div style="font-size: 18px;">（爆発・敵召喚など）</div>
+</div>
+</div>
+  <div class="gift-card" style="flex: 1; background: #00B4D8; border: 2px solid #0077B6; padding: 0px 1px; border-radius: 8px; color: #FF6F00; text-shadow: 2px 2px 3px #1A1A1A; display: flex; align-items: center; justify-content: center; text-align: center;"><div style="font-size: 52px; margin-right: 10px;">🛡️</div>
+  <div style="display: flex; flex-direction: column; align-items: center;">
+  <div style="font-size: 24px;">お助けギフト</div>
+  <div style="font-size: 18px;">（敵破壊・ダメージなど）</div>
+</div>
+</div>
+  <div class="gift-card" style="flex: 1; background: #FFD93D; border: 2px solid #E6C200; padding: 0px 2px; border-radius: 8px; color: #D90429; text-shadow: 2px 2px 3px #FFFFFF; display: flex; align-items: center; justify-content: center; text-align: center;"><div style="font-size: 52px; margin-right: 10px;">❓</div>
+  <div style="display: flex; flex-direction: column; align-items: center;">
+  <div style="font-size: 24px;">その他ギフト</div>
+  <div style="font-size: 18px;">（演出・妨害＋お助けなど）</div>
+</div>
+</div>
+</div>
+
+    
+      
 
     <!-- タイトル -->
     <div class="stream-title" id="rainbowText">ギフトで妨害！エンドラ討伐なるか！？</div>
@@ -129,12 +149,12 @@
     const text = document.getElementById("rainbowText");
     let hue = 0;
     const lightColors = [
-      '#FF0000', '#FF4500', '#FF8C00', '#FFA500', '#FFD700', '#FFFF00', '#FFC300'
+      '#FF0000', '#FF8C00', '#FFD700', '#32CD32', '#1E90FF', '#FF1493', '#00CED1', '#FF6347'
     ];
     setInterval(() => {
       hue = (hue + 1) % lightColors.length;
       text.style.color = lightColors[hue];
-    }, 300);
+    }, 400);
   </script>
 </body>
 </html>
