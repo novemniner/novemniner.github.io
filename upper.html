@@ -13,7 +13,7 @@
 
     #capture-area {
       width: 1080px;
-      height: 410px;
+      height: 450px;
       position: relative;
       background: linear-gradient(to bottom, #a1e3ff, #c2f0fc);
       overflow: hidden;
@@ -129,21 +129,21 @@
     <div class="stream-title" id="rainbowText">ギフトで妨害！エンドラ討伐なるか！？</div>
   </div>
 
-  <div style="text-align: center">
+  <!-- <div style="text-align: center">
     <button id="saveBtn">PNGとして保存</button>
-  </div>
+  </div> -->
 
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script>
-    document.getElementById('saveBtn').addEventListener('click', () => {
-      const capture = document.getElementById('capture-area');
-      html2canvas(capture, { backgroundColor: '#ffffff' }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'tiktok_overlay.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      });
-    });
+    // document.getElementById('saveBtn').addEventListener('click', () => {
+    //   const capture = document.getElementById('capture-area');
+    //   html2canvas(capture, { backgroundColor: '#ffffff' }).then(canvas => {
+    //     const link = document.createElement('a');
+    //     link.download = 'tiktok_overlay.png';
+    //     link.href = canvas.toDataURL('image/png');
+    //     link.click();
+    //   });
+    // });
 
     // レインボー文字の色変化
     const text = document.getElementById("rainbowText");
