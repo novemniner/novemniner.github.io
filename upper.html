@@ -9,14 +9,14 @@
       margin: 0;
       padding: 0;
       overflow: hidden;
-      background-color: white;
+      background-
     }
 
     #capture-area {
       width: 1080px;
       height: 470px;
       position: relative;
-      background: linear-gradient(to bottom, #4d0000, #000000);
+      background: linear-gradient(to bottom, #2a003d, #000000);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -37,7 +37,7 @@
       object-fit: contain;
       z-index: 1;
       opacity: 0.9;
-      filter: drop-shadow(0 0 15px #ff3300);
+      filter: drop-shadow(0 0 15px #8000ff); /* ← 紫っぽい光に戻す */
       pointer-events: none;
     }
 
@@ -46,7 +46,7 @@
       bottom: 20px;
       width: 100%;
       text-align: center;
-      font-size: 60px;
+      font-size: 54px;
       font-weight: 900;
       color: red;
       text-shadow:
@@ -62,7 +62,7 @@
     .info-box {
       position: absolute;
       top: 10px;
-      left: 20px;
+      right: 20px;
       padding: 10px 16px;
       background: rgba(0, 0, 0, 0.6);
       border-radius: 12px;
@@ -94,13 +94,19 @@
 
     <!-- 上部インフォメーション -->
     <div class="info-box">
-      🎁 ギフトで妨害できる！<br>
-      💣 爆発・敵召喚・視界妨害など<br>
-      👑 一番ギフト送った人は画面に名前が出るかも！？
+      <div style="background: #F15BB5; border: 2px solid #E649A0; padding: 6px 10px; margin-bottom: 6px; border-radius: 8px; color: #00F5D4; text-shadow: 2px 2px 3px #1A1A1A;">
+        🔴 妨害ギフト（爆発・敵召喚など）
+      </div>
+      <div style="background: #00B4D8; border: 2px solid #0077B6; padding: 6px 10px; margin-bottom: 6px; border-radius: 8px; color: #FF6F00; text-shadow: 1px 1px #1A1A1A;">
+        🟢 お助けギフト（敵を破壊・ダメージなど）
+      </div>
+      <div style="background: #FFD93D; border: 2px solid #E6C200; padding: 6px 10px; border-radius: 8px; color: #D90429; text-shadow: 2px 2px 3px #FFFFFF;">
+        🟡 その他ギフト（演出など）
+      </div>
     </div>
 
     <!-- タイトル -->
-    <div class="stream-title" id="rainbowText">ギフトで妨害！？やめてってば！でもエンドラ倒す！</div>
+    <div class="stream-title" id="rainbowText">ギフトで妨害！エンドラ討伐なるか！？</div>
   </div>
 
   <div style="text-align: center">
@@ -122,10 +128,13 @@
     // レインボー文字の色変化
     const text = document.getElementById("rainbowText");
     let hue = 0;
+    const lightColors = [
+      '#FF0000', '#FF4500', '#FF8C00', '#FFA500', '#FFD700', '#FFFF00', '#FFC300'
+    ];
     setInterval(() => {
-      hue = (hue + 2) % 360;
-      text.style.color = `hsl(${hue}, 100%, 60%)`;
-    }, 50);
+      hue = (hue + 1) % lightColors.length;
+      text.style.color = lightColors[hue];
+    }, 300);
   </script>
 </body>
 </html>
