@@ -6,17 +6,17 @@
   <title>TikTokLive Overlay</title>
   <style>
     body {
-      background-color: white;
       margin: 0;
       padding: 0;
       overflow: hidden;
+      background-color: white;
     }
 
     #capture-area {
       width: 1080px;
       height: 470px;
       position: relative;
-      background-color: black;
+      background: linear-gradient(to bottom, #4d0000, #000000);
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -27,12 +27,18 @@
       box-sizing: border-box;
     }
 
-    .header {
-      font-size: 48px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      text-align: center;
-      padding: 5px 10px;
+    .dragon-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(20deg);
+      width: 80%;
+      height: auto;
+      object-fit: contain;
+      z-index: 1;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 15px #ff3300);
+      pointer-events: none;
     }
 
     .stream-title {
@@ -40,12 +46,31 @@
       bottom: 20px;
       width: 100%;
       text-align: center;
-      font-size: 56px;
-      font-weight: bold;
-      color: white;
-      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+      font-size: 60px;
+      font-weight: 900;
+      color: red;
+      text-shadow:
+        2px 2px 0 #000,
+        -2px 2px 0 #000,
+        2px -2px 0 #000,
+        -2px -2px 0 #000;
       z-index: 10;
       pointer-events: none;
+      transition: color 0.3s linear;
+    }
+
+    .info-box {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      padding: 10px 16px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 12px;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      z-index: 10;
+      max-width: 400px;
     }
 
     #saveBtn {
@@ -57,13 +82,27 @@
       border: 1px solid #ccc;
       color: white;
       cursor: pointer;
+      z-index: 10;
+      position: relative;
     }
   </style>
 </head>
 <body>
   <div id="capture-area">
-    <div class="stream-title">妨害マイクラでエンドラ討伐！</div>
+    <!-- エンドラGIF -->
+    <img src="./image/ender_dragon.gif" alt="エンダードラゴン" class="dragon-bg">
+
+    <!-- 上部インフォメーション -->
+    <div class="info-box">
+      🎁 ギフトで妨害できる！<br>
+      💣 爆発・敵召喚・視界妨害など<br>
+      👑 一番ギフト送った人は画面に名前が出るかも！？
+    </div>
+
+    <!-- タイトル -->
+    <div class="stream-title" id="rainbowText">ギフトで妨害！？やめてってば！でもエンドラ倒す！</div>
   </div>
+
   <div style="text-align: center">
     <button id="saveBtn">PNGとして保存</button>
   </div>
@@ -79,6 +118,14 @@
         link.click();
       });
     });
+
+    // レインボー文字の色変化
+    const text = document.getElementById("rainbowText");
+    let hue = 0;
+    setInterval(() => {
+      hue = (hue + 2) % 360;
+      text.style.color = `hsl(${hue}, 100%, 60%)`;
+    }, 50);
   </script>
 </body>
 </html>
