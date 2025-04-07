@@ -5,6 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TikTokLive Overlay</title>
   <style>
+
+@keyframes rainbowFade {
+  0%   { color: red; }
+  16%  { color: orange; }
+  32%  { color: yellow; }
+  48%  { color: limegreen; }
+  64%  { color: dodgerblue; }
+  80%  { color: violet; }
+  100% { color: red; }
+}
+.rainbow-text {
+  animation: rainbowFade 5s linear infinite;
+}
+
     body {
       margin: 0;
       padding: 0;
@@ -126,7 +140,7 @@
       
 
     <!-- タイトル -->
-    <div class="stream-title" id="rainbowText">ギフトで妨害！エンドラ討伐なるか！？</div>
+    <div class="stream-title rainbow-text" id="rainbowText">ギフトで妨害！エンドラ討伐なるか！？</div>
   </div>
 
   <!-- <div style="text-align: center">
@@ -147,14 +161,7 @@
 
     // レインボー文字の色変化
     const text = document.getElementById("rainbowText");
-    let hue = 0;
-    const lightColors = [
-      '#FF0000', '#FF8C00', '#FFD700', '#32CD32', '#1E90FF', '#FF1493', '#00CED1', '#FF6347'
-    ];
-    setInterval(() => {
-      hue = (hue + 1) % lightColors.length;
-      text.style.color = lightColors[hue];
-    }, 400);
+    
   </script>
 </body>
 </html>
