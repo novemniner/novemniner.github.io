@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTokLive Overlay</title>
+  <style>
+
+@keyframes rainbowFade {
+  0%   { color: red; }
+  16%  { color: orange; }
+  32%  { color: yellow; }
+  48%  { color: limegreen; }
+  64%  { color: dodgerblue; }
+  80%  { color: violet; }
+  100% { color: red; }
+}
+.rainbow-text {
+  animation: rainbowFade 5s linear infinite;
+}
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      }
+
+    #capture-area {
+      width: 1080px;
+      height: 450px;
+      position: relative;
+      background: linear-gradient(to bottom, #a1e3ff, #c2f0fc);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 30px 40px 10px 40px;
+      margin: auto;
+      box-sizing: border-box;
+    }
+
+    .dragon-bg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(20deg);
+      width: 80%;
+      height: auto;
+      object-fit: contain;
+      z-index: 1;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 15px #8000ff); /* ← 紫っぽい光に戻す */
+      pointer-events: none;
+    }
+
+    .stream-title {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 58px;
+      font-weight: 900;
+      color: red;
+      text-shadow:
+        2px 2px 0 #000,
+        -2px 2px 0 #000,
+        2px -2px 0 #000,
+        -2px -2px 0 #000;
+      z-index: 10;
+      pointer-events: none;
+      transition: color 0.3s linear;
+    }
+
+    .info-box {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      padding: 10px 16px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 12px;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      z-index: 10;
+      max-width: 400px;
+    }
+
+    #saveBtn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+      border-radius: 8px;
+      background-color: #555;
+      border: 1px solid #ccc;
+      color: white;
+      cursor: pointer;
+      z-index: 10;
+      position: relative;
+    }
+  
+
+    /* ギフトカード用フォントクラス */
+    .gift-card {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div id="capture-area">
+    <!-- エンドラGIF -->
+    <img src="./image/ender_dragon.gif" alt="エンダードラゴン" class="dragon-bg">
+
+    <!-- 上部インフォメーション -->
+    <div style="display: flex; gap: 8px; width: 100%; padding: 10px 20px; box-sizing: border-box; background: rgba(0, 0, 0, 0.6); position: absolute; top: 0; left: 0; z-index: 10;">
+  <div class="gift-card" style="flex: 1; background: #F15BB5; border: 2px solid #E649A0; padding: 0px 1px; border-radius: 8px; color: #00F5D4; text-shadow: 2px 2px 3px #1A1A1A; display: flex; align-items: center; justify-content: center; text-align: center;"><div style="font-size: 48px; margin-right: 10px;">💣</div>
+  <div style="display: flex; flex-direction: column; align-items: center;">
+  <div style="font-size: 24px;">妨害ギフト</div>
+  <div style="font-size: 18px;">（爆発・敵召喚など）</div>
+</div>
+</div>
+  <div class="gift-card" style="flex: 1; background: #00B4D8; border: 2px solid #0077B6; padding: 0px 1px; border-radius: 8px; color: #FF6F00; text-shadow: 2px 2px 3px #1A1A1A; display: flex; align-items: center; justify-content: center; text-align: center;"><div style="font-size: 52px; margin-right: 10px;">🛡️</div>
+  <div style="display: flex; flex-direction: column; align-items: center;">
+  <div style="font-size: 24px;">お助けギフト</div>
+  <div style="font-size: 18px;">（敵破壊・ダメージなど）</div>
+</div>
+</div>
+  <div class="gift-card" style="flex: 1; background: #FFD93D; border: 2px solid #E6C200; padding: 0px 2px; border-radius: 8px; color: #D90429; text-shadow: 2px 2px 3px #FFFFFF; display: flex; align-items: center; justify-content: center; text-align: center;"><div style="font-size: 52px; margin-right: 10px;">❓</div>
+  <div style="display: flex; flex-direction: column; align-items: center;">
+  <div style="font-size: 24px;">その他ギフト</div>
+  <div style="font-size: 18px;">（演出・妨害＋お助けなど）</div>
+</div>
+</div>
+</div>
+
+    
+      
+
+    <!-- タイトル -->
+    <div class="stream-title rainbow-text" id="rainbowText">ギフトで妨害！エンドラ討伐なるか！？</div>
+  </div>
+
+  <!-- <div style="text-align: center">
+    <button id="saveBtn">PNGとして保存</button>
+  </div> -->
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    // document.getElementById('saveBtn').addEventListener('click', () => {
+    //   const capture = document.getElementById('capture-area');
+    //   html2canvas(capture, { backgroundColor: '#ffffff' }).then(canvas => {
+    //     const link = document.createElement('a');
+    //     link.download = 'tiktok_overlay.png';
+    //     link.href = canvas.toDataURL('image/png');
+    //     link.click();
+    //   });
+    // });
+
+    // レインボー文字の色変化
+    const text = document.getElementById("rainbowText");
+    
+  </script>
+</body>
+</html>
